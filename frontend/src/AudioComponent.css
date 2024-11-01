@@ -1,0 +1,38 @@
+/* styles.css */
+.lyric {
+    color : #c41a53;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.4s ease;
+    margin-bottom: '20px';
+    font-size: '1.2em';
+}
+  
+.lyric.active {
+    opacity: 0.9;
+    transform: translateY(0);
+}
+
+.lyric span {
+    opacity: 0;
+    display: inline-block;
+    animation: fade-in 0.3s ease forwards;
+    animation-play-state: paused; /* Default state */
+}
+
+.lyric.running span {
+    animation-play-state: running;
+}
+  
+/* Keyframe animation to reveal characters */
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(-10px); /* Optional bounce effect */
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+  
