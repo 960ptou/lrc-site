@@ -11,7 +11,7 @@ import './AudioComponent.css';
  *
  * Props:
  * - `audioUrl` (string): URL of the audio file to play.
- * - `lrcUrl` (string): URL of the LRC file containing timestamped lyrics data.
+ * - `subtitleURL` (string): URL of the LRC file containing timestamped lyrics data.
  * - `percentBeforeComplete` (number, optional): Determines completion percentage for
  *    lyric animation relative to timestamp. Defaults to 0.5.
  * - `splitChar` (string, optional): Custom character for separating visible and upcoming lyrics.
@@ -26,7 +26,7 @@ import './AudioComponent.css';
  *   return (
  *     <LyricsAudioPlayer 
  *       audioUrl="/path/to/audio.mp3"
- *       lrcUrl="/path/to/lyrics.lrc"
+ *       subtitleURL="/path/to/lyrics.lrc"
  *       percentBeforeComplete={0.4}
  *       splitChar="§"
  *     />
@@ -56,7 +56,7 @@ import './AudioComponent.css';
 
 const LyricsAudioPlayer = ({
   audioUrl, // URL of audio file
-  lrcUrl, // URL of LRC data
+  subtitleURL, // URL of LRC data
   percentBeforeComplete = 0.5, // Completion percentage for lyric animation
   splitChar = '\u001F' // Custom character for splitting lyrics
 }) => {
@@ -74,7 +74,7 @@ const LyricsAudioPlayer = ({
   const fetchData = async () => {
     try {
       // Fetch LRC data
-      const response = await axios.get(lrcUrl);
+      const response = await axios.get(subtitleURL);
       const mapData = new Map(response.data);
       setLrcData(mapData);
       setAllowedTimes([...mapData.keys()]);
@@ -88,9 +88,10 @@ const LyricsAudioPlayer = ({
     }
   };
 
+
   useEffect(() => {
     fetchData();
-  }, [audioUrl, lrcUrl]);
+  }, [audioUrl, subtitleURL]);
 
   useEffect(() => {
     const interval = setInterval(() => {
