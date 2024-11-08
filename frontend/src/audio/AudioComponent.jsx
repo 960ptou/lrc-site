@@ -29,6 +29,7 @@ import "./AudioComponent.css";
  *       subtitleURL="/path/to/lyrics.lrc"
  *       percentBeforeComplete={0.4}
  *       splitChar="§"
+ *       onAudioEnd=callback
  *     />
  *   );
  * }
@@ -58,8 +59,10 @@ const LyricsAudioPlayer = ({
   subtitleURL, // URL of LRC data
   percentBeforeComplete = 0.5, // Completion percentage for lyric animation
   splitChar = "\u001F", // Custom character for splitting lyrics
+  onAudioEnd = ()=>null, // When audio finish
+  auto = false,
 }) => {
-  const [lrcData, setLrcData] = useState(new Map());
+  const [subtitleData, setSubtitleData] = useState(new Map());
   const [allowedTimes, setAllowedTimes] = useState([]);
   const [audioSrc, setAudioSrc] = useState(null);
   const [currentLyric, setCurrentLyric] = useState("");
@@ -75,7 +78,7 @@ const LyricsAudioPlayer = ({
       // Fetch LRC data
       const response = await axios.get(subtitleURL);
       const mapData = new Map(response.data);
-      setLrcData(mapData);
+      setSubtitleData(mapData);
       setAllowedTimes([...mapData.keys()]);
 
       // Fetch audio source
@@ -111,7 +114,7 @@ const LyricsAudioPlayer = ({
         previous = time;
       }
 
-      let newLyric = lrcData.get(previous) || "";
+      let newLyric = subtitleData.get(previous) || "";
       const averageTime = (
         ((next - previous) * (1 - percentBeforeComplete)) /
         newLyric.length
@@ -137,7 +140,7 @@ const LyricsAudioPlayer = ({
     }, 100);
 
     return () => clearInterval(interval);
-  }, [lrcData, currentLyric, allowedTimes, percentBeforeComplete, splitChar]);
+  }, [subtitleData, currentLyric, allowedTimes, percentBeforeComplete, splitChar]);
 
   const handlePlayPause = () => {
     setRunningAnimation(!audioRef.current.paused);
@@ -145,7 +148,7 @@ const LyricsAudioPlayer = ({
 
   return (
     <div style={{ width: 300, margin: "50px auto" }}>
-      {lrcData.size > 0 && (
+      {subtitleData.size > 0 && (
         <div>
           <div
             className={`lyric ${isActive ? "active" : ""} ${
@@ -170,11 +173,13 @@ const LyricsAudioPlayer = ({
           </div>
 
           <audio
+            autoPlay={auto}
             ref={audioRef}
             src={audioSrc}
             controls
             onPlay={handlePlayPause}
             onPause={handlePlayPause}
+            onEnded={onAudioEnd} // Event triggered when audio finishes
           />
         </div>
       )}

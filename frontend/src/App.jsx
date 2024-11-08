@@ -14,6 +14,7 @@ function App(){
   const [sideBarSelection, setSideBarSelection] = useState("")
   const [audioLk, setAudioLk] = useState("");
   const [subtitleLk, setSubtitleLk] = useState("");
+  const [autoPlay, setAutoPlay] = useState(false);
 
   const fetchData = async () =>{
     try {
@@ -72,9 +73,31 @@ function App(){
       />
     )}
 
-    { (audioLk && subtitleLk) && (<LyricsAudioPlayer 
+    {(audioLk && subtitleLk) && (<LyricsAudioPlayer 
       audioUrl={audioLk}
       subtitleURL={subtitleLk}
+      onAudioEnd={
+        ()=>{
+          const addLastNumber = (s) => {
+            const parts = s.split("/");
+            const lastPart = parts[parts.length - 1];
+            if (!isNaN(lastPart)) {
+              parts[parts.length - 1] = (parseInt(lastPart) + 1).toString();
+            }
+            return parts.join("/");
+          };
+          const currentIndx = Number.parseInt(audioLk.match(/\/[^\/]+\/[^\/]+\/(\d+)/)[1].replace("/",""));
+          if (currentIndx === sideBar.length - 1){
+            console.log("Series Finished")
+            return;
+          }
+
+          setAudioLk(addLastNumber(audioLk)) 
+          setSubtitleLk(addLastNumber(subtitleLk))
+          setAutoPlay(true)
+        }
+      }
+      auto={autoPlay}
     />) }
   </div>
   )
