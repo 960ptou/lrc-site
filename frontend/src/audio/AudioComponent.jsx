@@ -55,136 +55,151 @@ import "./AudioComponent.css";
  */
 
 const LyricsAudioPlayer = ({
-  audioUrl, // URL of audio file
-  subtitleURL, // URL of LRC data
-  percentBeforeComplete = 0.5, // Completion percentage for lyric animation
-  splitChar = "\u001F", // Custom character for splitting lyrics
-  onAudioEnd = ()=>null, // When audio finish
-  auto = false,
+    audioUrl, // URL of audio file
+    subtitleURL, // URL of LRC data
+    percentBeforeComplete = 0.5, // Completion percentage for lyric animation
+    splitChar = "\u001F", // Custom character for splitting lyrics
+    onAudioEnd = () => null, // When audio finish
+    auto = false,
 }) => {
-  const [subtitleData, setSubtitleData] = useState(new Map());
-  const [allowedTimes, setAllowedTimes] = useState([]);
-  const [audioSrc, setAudioSrc] = useState(null);
-  const [currentLyric, setCurrentLyric] = useState("");
-  const [isActive, setIsActive] = useState(false);
-  const [runningAnimation, setRunningAnimation] = useState(false);
-  const [animationDelayTime, setAnimationDelayTime] = useState(0);
+    const [subtitleData, setSubtitleData] = useState(new Map());
+    const [allowedTimes, setAllowedTimes] = useState([]);
+    const [audioSrc, setAudioSrc] = useState(null);
+    const [currentLyric, setCurrentLyric] = useState("");
+    const [isActive, setIsActive] = useState(false);
+    const [runningAnimation, setRunningAnimation] = useState(false);
+    const [animationDelayTime, setAnimationDelayTime] = useState(0);
 
-  const audioRef = useRef(null);
+    const audioRef = useRef(null);
 
-  // Fetch LRC data and audio source from URLs
-  const fetchData = async () => {
-    try {
-      // Fetch LRC data
-      const response = await axios.get(subtitleURL);
-      const mapData = new Map(response.data);
-      setSubtitleData(mapData);
-      setAllowedTimes([...mapData.keys()]);
+    // Fetch LRC data and audio source from URLs
+    const fetchData = async () => {
+        try {
+            // Fetch LRC data
+            const response = await axios.get(subtitleURL);
+            const mapData = new Map(response.data);
+            setSubtitleData(mapData);
+            setAllowedTimes([...mapData.keys()]);
 
-      // Fetch audio source
-      const audioResponse = await axios.get(audioUrl, { responseType: "blob" });
-      const audioURL = URL.createObjectURL(audioResponse.data);
-      setAudioSrc(audioURL);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, [audioUrl, subtitleURL]);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (!audioRef.current) return;
-
-      const currentTime = audioRef.current.currentTime;
-      let previous = 0;
-      let next = 0;
-
-      // Find the closest lyric timing
-      for (let time of allowedTimes) {
-        if (currentTime === 0) {
-          break;
+            // Fetch audio source
+            const audioResponse = await axios.get(audioUrl, {
+                responseType: "blob",
+            });
+            const audioURL = URL.createObjectURL(audioResponse.data);
+            setAudioSrc(audioURL);
+        } catch (error) {
+            console.error("Error fetching data:", error);
         }
-        if (currentTime > previous && currentTime < time) {
-          next = time;
-          break;
-        }
-        previous = time;
-      }
+    };
 
-      let newLyric = subtitleData.get(previous) || "";
-      const averageTime = (
-        ((next - previous) * (1 - percentBeforeComplete)) /
-        newLyric.length
-      ).toFixed(2);
-      const visibleChars = Math.round((currentTime - previous) / averageTime);
-      if (visibleChars < newLyric.length) {
-        newLyric =
-          newLyric.slice(0, visibleChars) +
-          splitChar +
-          newLyric.slice(visibleChars);
-      }
+    useEffect(() => {
+        fetchData();
+    }, [audioUrl, subtitleURL]);
 
-      if (
-        newLyric.replace(splitChar, "") !== currentLyric.replace(splitChar, "")
-      ) {
-        setIsActive(false);
-        setTimeout(() => {
-          setAnimationDelayTime(averageTime);
-          setCurrentLyric(newLyric);
-          setIsActive(true);
-        }, 10);
-      }
-    }, 100);
+    useEffect(() => {
+        const interval = setInterval(() => {
+            if (!audioRef.current) return;
 
-    return () => clearInterval(interval);
-  }, [subtitleData, currentLyric, allowedTimes, percentBeforeComplete, splitChar]);
+            const currentTime = audioRef.current.currentTime;
+            let previous = 0;
+            let next = 0;
 
-  const handlePlayPause = () => {
-    setRunningAnimation(!audioRef.current.paused);
-  };
+            // Find the closest lyric timing
+            for (let time of allowedTimes) {
+                if (currentTime === 0) {
+                    break;
+                }
+                if (currentTime > previous && currentTime < time) {
+                    next = time;
+                    break;
+                }
+                previous = time;
+            }
 
-  return (
-    <div style={{ width: 300, margin: "50px auto" }}>
-      {subtitleData.size > 0 && (
-        <div>
-          <div
-            className={`lyric ${isActive ? "active" : ""} ${
-              runningAnimation ? "running" : ""
-            }`}
-          >
-            <span key={`${currentLyric}`}>
-              {currentLyric.split(splitChar)[0]}
-            </span>
+            let newLyric = subtitleData.get(previous) || "";
+            const averageTime = (
+                ((next - previous) * (1 - percentBeforeComplete)) /
+                newLyric.length
+            ).toFixed(2);
+            const visibleChars = Math.round(
+                (currentTime - previous) / averageTime
+            );
+            if (visibleChars < newLyric.length) {
+                newLyric =
+                    newLyric.slice(0, visibleChars) +
+                    splitChar +
+                    newLyric.slice(visibleChars);
+            }
 
-            {currentLyric
-              ?.split(splitChar)[1]
-              ?.split("")
-              .map((char, index) => (
-                <span
-                  key={`${currentLyric}-${index}`}
-                  style={{ animationDelay: `${index * animationDelayTime}s` }}
-                >
-                  {char}
-                </span>
-              ))}
-          </div>
+            if (
+                newLyric.replace(splitChar, "") !==
+                currentLyric.replace(splitChar, "")
+            ) {
+                setIsActive(false);
+                setTimeout(() => {
+                    setAnimationDelayTime(averageTime);
+                    setCurrentLyric(newLyric);
+                    setIsActive(true);
+                }, 10);
+            }
+        }, 100);
 
-          <audio
-            autoPlay={auto}
-            ref={audioRef}
-            src={audioSrc}
-            controls
-            onPlay={handlePlayPause}
-            onPause={handlePlayPause}
-            onEnded={onAudioEnd} // Event triggered when audio finishes
-          />
+        return () => clearInterval(interval);
+    }, [
+        subtitleData,
+        currentLyric,
+        allowedTimes,
+        percentBeforeComplete,
+        splitChar,
+    ]);
+
+    const handlePlayPause = () => {
+        setRunningAnimation(!audioRef.current.paused);
+    };
+
+    return (
+        <div style={{ width: 300, margin: "50px auto" }}>
+            {subtitleData.size > 0 && (
+                <div>
+                    <div
+                        className={`lyric ${isActive ? "active" : ""} ${
+                            runningAnimation ? "running" : ""
+                        }`}
+                    >
+                        <span key={`${currentLyric}`}>
+                            {currentLyric.split(splitChar)[0]}
+                        </span>
+
+                        {currentLyric
+                            ?.split(splitChar)[1]
+                            ?.split("")
+                            .map((char, index) => (
+                                <span
+                                    key={`${currentLyric}-${index}`}
+                                    style={{
+                                        animationDelay: `${
+                                            index * animationDelayTime
+                                        }s`,
+                                    }}
+                                >
+                                    {char}
+                                </span>
+                            ))}
+                    </div>
+
+                    <audio
+                        autoPlay={auto}
+                        ref={audioRef}
+                        src={audioSrc}
+                        controls
+                        onPlay={handlePlayPause}
+                        onPause={handlePlayPause}
+                        onEnded={onAudioEnd} // Event triggered when audio finishes
+                    />
+                </div>
+            )}
         </div>
-      )}
-    </div>
-  );
+    );
 };
 
 export default LyricsAudioPlayer;
