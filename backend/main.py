@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse, FileResponse
-from lrc_utils import parse_lrc, parse_vtt
+from util.subtitle_utils import parse_lrc, parse_vtt
 from dotenv import load_dotenv
 import os, re
 from pathlib import Path
