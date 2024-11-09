@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --port 3001",
-    "build": "vite build",
+    "build": "vite build && mv dist/* ../out/public/",
     "lint": "eslint .",
     "preview": "vite preview"
   },
