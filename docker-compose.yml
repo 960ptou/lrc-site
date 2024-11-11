@@ -4,6 +4,7 @@ services:
     image: nginx:latest
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
+      - ${NGINX_LOG_VOL}:/var/log/nginx
     ports:
       - "80:80"
     depends_on:
@@ -19,8 +20,8 @@ services:
     networks:
       - net
     volumes:
-      - ${AUDIO_VOL}:${SOURCE_DIR}
-      - ${LOG_VOL}:${LOG_DIR}
+      - ${SOURCE_VOL}:${SOURCE_DIR}
+      - ${BACKEND_LOG_VOL}:${LOG_DIR}
     environment:
       LOG : ${LOG_DIR}
       SOURCE : ${SOURCE_DIR}
