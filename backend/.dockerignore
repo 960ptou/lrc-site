@@ -1,0 +1,6 @@
+____pycache__/
+*.pyc
+*.log
+experimental/
+.venv/
+.gitignore

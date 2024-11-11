@@ -4,10 +4,11 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --port 3001",
-    "build": "vite build && mv dist/* ../out/public/",
+    "dev": "vite --port 3001 --host",
+    "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview --port 3001 --host",
+    "serve": "serve -s dist -l 3001"
   },
   "dependencies": {
     "@emotion/react": "^11.13.3",
@@ -16,7 +17,8 @@
     "@mui/material": "^6.1.6",
     "axios": "^1.7.7",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "serve": "^14.2.4"
   },
   "devDependencies": {
     "@eslint/js": "^9.13.0",

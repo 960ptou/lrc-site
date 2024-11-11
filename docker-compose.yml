@@ -1,0 +1,37 @@
+version: '1'
+services:
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - net
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    networks:
+      - net
+    volumes:
+      - ${AUDIO_VOL}:${SOURCE_DIR}
+      - ${LOG_VOL}:${LOG_DIR}
+    environment:
+      LOG : ${LOG_DIR}
+      SOURCE : ${SOURCE_DIR}
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    networks:
+      - net
+
+networks:
+  net:
+    driver: bridge

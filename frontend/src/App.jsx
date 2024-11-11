@@ -49,7 +49,7 @@ function App() {
                         >
                             <ImageCard
                                 imageSources={[
-                                    ...Array(items["images"].length),
+                                    ...Array(items["images"]?.length),
                                 ].map(
                                     (_, i) => `/api/image/${identifier}/${i}`
                                 )}

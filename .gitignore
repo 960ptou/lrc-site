@@ -1,13 +1,6 @@
-node_modules/
-package-lock.json
-__pycache__/
-backend-env/
 log
-# test files
-experimental/
-.env
-# compile files
-out/
-
 # Macos
 .DS_Store
+
+# env variables
+.env

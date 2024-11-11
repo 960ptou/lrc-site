@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse, FileResponse
 from util.subtitle_utils import parse_lrc, parse_vtt
-from dotenv import load_dotenv
 import os, re
 from pathlib import Path
 from glob import glob
@@ -11,7 +10,6 @@ from datetime import datetime
 from fuzzywuzzy import fuzz
 
 # init processes
-load_dotenv()
 SOURCE_FOLDER = os.getenv("SOURCE")
 LOG_FOLDER = os.getenv("LOG")
 
@@ -123,6 +121,7 @@ CLIENT_RESOURCE_LOOKUP = {
 
 app = FastAPI()
 
+
 @app.get("/resources/page/{page_number}")
 async def page_resources(page_number : int):
     # returning 3?/2 resources : image, meta(optional), identifier to audio/video
@@ -155,7 +154,10 @@ async def get_image(identifier : str, index : int):
 
 @app.get("/audio/{identifier}/{index}")
 async def get_audio(identifier : str, index : int):
-    return FileResponse(SERVER_RESOURCE_LOOKUP[identifier]["resources"][index][0])
+    return FileResponse(
+        SERVER_RESOURCE_LOOKUP[identifier]["resources"][index][0],
+        media_type="audio/mp3",
+    )
 
 @app.get("/subtitle/{identifier}/{index}")
 async def get_subtitle(identifier : str, index : int):
