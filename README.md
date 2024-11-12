@@ -57,6 +57,5 @@ location of audio and subtitle file will not matter as everything is parsed to k
 ### DEMO to install (w/ docker)
 https://github.com/user-attachments/assets/b9b1011c-6efe-402c-badb-f98e2bce226c
 
-
-### DEMO to install (w/ docker)
-https://github.com/960ptou/lrc-site/tree/main/assets/demo.mp4
+| or Check this
+[Demo Video](assets/demo.mp4)
