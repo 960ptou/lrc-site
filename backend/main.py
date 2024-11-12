@@ -32,7 +32,7 @@ def index_hash_identifier_exception_handler(func):
     async def wrapper(request : Request, *args, **kwargs):
         try:
             return await func(request, *args, **kwargs)
-        except KeyError as e:
+        except (KeyError, IndexError) as e:
             logger.error(f"Error processing {request.url.path} with params {kwargs}. Error: {e}")
             raise HTTPException(status_code=404, detail=f"Resource not found for {request.url.path}")
     return wrapper
@@ -67,6 +67,7 @@ async def get_audio(request : Request,identifier : str, index : int):
 async def get_subtitle(request : Request, identifier : str, index : int):
     file = SERVER_RESOURCE_LOOKUP[identifier]["resources"][index][1]
     suffix = Path(file).suffix[1:]
+    
     try:
         operation = {
             "lrc" : parse_lrc,
@@ -75,5 +76,4 @@ async def get_subtitle(request : Request, identifier : str, index : int):
     except KeyError:
         logger.error(f"Unfound extension {suffix} in [{request.url.path}]")
         return HTTPException(status_code=501, detail=f"Subtitle unable to be processed")
-
     return JSONResponse(content=operation(file))

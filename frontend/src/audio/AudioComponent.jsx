@@ -131,6 +131,7 @@ const LyricsAudioPlayer = ({
                     newLyric.slice(visibleChars);
             }
 
+
             if (
                 newLyric.replace(splitChar, "") !==
                 currentLyric.replace(splitChar, "")
@@ -182,7 +183,8 @@ const LyricsAudioPlayer = ({
                                         }s`,
                                     }}
                                 >
-                                    {char}
+                                    {/* So white space is still showed */}
+                                    {char === " " ? "\u00A0" : char} 
                                 </span>
                             ))}
                     </div>

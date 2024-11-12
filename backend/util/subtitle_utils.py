@@ -38,4 +38,7 @@ def parse_vtt(file_path) -> list[list[float, str]]:
                 # If line is not empty and there's a current timestamp, it's a lyric/caption
                 lyrics_list.append([convert_timestamp_to_float(current_timestamp), line])
                 current_timestamp = None  # Reset timestamp for next entry
+        
+        if len(lyrics_list) == 0:
+            lyrics_list.append([0.001, line])
     return lyrics_list
