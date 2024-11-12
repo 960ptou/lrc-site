@@ -55,6 +55,4 @@ location of audio and subtitle file will not matter as everything is parsed to k
             - run `nginx -c path/to/nginx.conf`
 
 ### DEMO to install (w/ docker)
-<video width="320" height="240" controls>
-  <source src="assets/demo.mp4" type="video/mp4">
-</video>
+[Demo Video](assets/demo.mp4)
