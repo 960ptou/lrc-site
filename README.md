@@ -18,12 +18,12 @@ location of audio and subtitle file will not matter as everything is parsed to k
 2. Modify '.env' file to have "SOURCE_VOL={directory above}"
 
 3. Running Docker | Local Dev
-    - **W/ Docker** run `docker compose up`
+    - **W/ Docker** run `docker compose up` | Access your site on port 80 => localhost:80 => localhost
     - **Local Dev** 
         - Requirements :
             - Python3.11
             - Poetry
-            - Node
+            - Node >=22
             - Optional : Nginx
 
         - MacOS :
