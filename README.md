@@ -55,4 +55,8 @@ location of audio and subtitle file will not matter as everything is parsed to k
             - run `nginx -c path/to/nginx.conf`
 
 ### DEMO to install (w/ docker)
+https://github.com/user-attachments/assets/b9b1011c-6efe-402c-badb-f98e2bce226c
+
+
+### DEMO to install (w/ docker)
 [Demo Video](assets/demo.mp4)
