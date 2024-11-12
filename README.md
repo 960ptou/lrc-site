@@ -53,3 +53,8 @@ location of audio and subtitle file will not matter as everything is parsed to k
             - modify `proxy_pass http://frontend:3001;` => `proxy_pass http://localhost:3001;`
             - and `proxy_pass http://backend:3000/;` = > `proxy_pass http://localhost:3000/;`
             - run `nginx -c path/to/nginx.conf`
+
+### DEMO to install (w/ docker)
+<video width="320" height="240" controls>
+  <source src="assets/demo.mp4" type="video/mp4">
+</video>
