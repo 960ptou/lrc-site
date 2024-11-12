@@ -42,5 +42,10 @@ location of audio and subtitle file will not matter as everything is parsed to k
         ```bash
         # in backend | your server will start in port 3001
         poetry shell
-        uvicorn main:app --reload --host localhost --port 3001
+        # Mac
+        LOG='../log/backend' SOURCE='../sample' uvicorn main:app --reload --host localhost --port 3001
+        # windows cmd
+        "LOG='../log/backend' SOURCE='../sample' uvicorn main:app --reload --host localhost --port 3001"
+        # windows ps
+        cmd /c "LOG='../log/backend' SOURCE='../sample' uvicorn main:app --reload --host localhost --port 3001"
         ```
