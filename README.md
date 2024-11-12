@@ -59,4 +59,4 @@ https://github.com/user-attachments/assets/b9b1011c-6efe-402c-badb-f98e2bce226c
 
 
 ### DEMO to install (w/ docker)
-[Demo Video](assets/demo.mp4)
+https://github.com/960ptou/lrc-site/tree/main/assets/demo.mp4
